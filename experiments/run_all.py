@@ -93,7 +93,7 @@ bench.append(dict(method=G["method"] + " (reference)", runs=1, best_s=ref, mean_
                   hit_global_within_0_5pct="-", mean_gap_to_global="0.00%",
                   mean_evaluations=G["evals"], mean_runtime_s=G["seconds"]))
 tables["E2_benchmark_v1model"] = pd.DataFrame(bench)
-v1_report_x = np.array([63.0, 5.88, 33.87, 41.5])          # reproduces report Table 3 (3942.93 s)
+v1_report_x = np.array([63.00000000000003, 5.878511346782554, 33.87218214379256, 41.5])  # from Trial 5.xlsx = report Table 3
 v1r = p1.evaluate(v1_report_x[:2], [v1_report_x[2:]])
 tables["E1_reproduction"] = pd.DataFrame([
     dict(item="Report Table 3, 43 modules, best total (s)", value=3942.930),
@@ -259,14 +259,15 @@ PL.layout(tp.p[0], b["x"], "Two-crane layout (shared zone = overlap of jib circl
 log("E7 sensitivity")
 def opt_move(crane, motion):
     pp = Problem(compsR, crane, motion, siR)
-    r = O.run_ga(pp, settings=GASettings(seed=0, patience=40))
-    return r["res"]["movement"]
+    r = O.run_ga(pp, settings=GASettings(seed=0))
+    # crane-controlled time = movement + signal delays (fixed hook-on/placement excluded)
+    return r["res"]["total"] - pp.N * (motion.hook_on_time + motion.placement_time)
 baseM = opt_move(crR, moR)
 sens = []
 tests = [("Slew speed", "crane", "slew_speed"), ("Trolley speed", "crane", "trolley_speed"),
          ("Hoist speed (loaded)", "crane", "hoist_speed_loaded"), ("Hoist speed (empty)", "crane", "hoist_speed_empty"),
          ("Signal delay per action", "motion", "action_delay"), ("Slew/trolley overlap alpha", "motion", "alpha"),
-         ("Floor height", "motion", "floor_height")]
+         ("Floor height", "motion", "floor_height"), ("Jib radius (crane size)", "crane", "radius")]
 for lab, which, attr in tests:
     vals = []
     for f in (0.8, 1.2):
@@ -275,10 +276,10 @@ for lab, which, attr in tests:
         else:
             vals.append(opt_move(crR, replace(moR, **{attr: getattr(moR, attr) * f})))
     sens.append((lab, vals[0], vals[1]))
-tables["E7_sensitivity"] = pd.DataFrame([dict(parameter=l, movement_h_minus20=a / 3600, movement_h_plus20=b / 3600,
+tables["E7_sensitivity"] = pd.DataFrame([dict(parameter=l, crane_time_h_minus20=a / 3600, crane_time_h_plus20=b / 3600,
                                               change_minus20_pct=(a / baseM - 1) * 100, change_plus20_pct=(b / baseM - 1) * 100)
                                          for l, a, b in sens])
-PL.tornado(sens, baseM, os.path.join(FIG, "E7_tornado.png"), "Sensitivity of optimal crane movement time (+/-20%)")
+PL.tornado(sens, baseM, os.path.join(FIG, "E7_tornado.png"), "Sensitivity of optimal crane time, movement + signal delays (+/-20%)")
 # check of report claim: slew 0.07 -> 0.05 rad/s in the v1 model
 p_slow = Problem(comps1, replace(cr, slew_speed=0.05), mo, si)
 g_slow = O.grid_refine(p_slow, step=2.0)

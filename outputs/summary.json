@@ -1,0 +1,100 @@
+{
+  "v1_report_total": 3942.93,
+  "global_opt_v1model": {
+    "total": 3747.0478198735977,
+    "x": [
+      62.99,
+      5.88,
+      63.5,
+      55.0
+    ],
+    "improvement_vs_report_pct": 4.967934508763838
+  },
+  "rule_of_thumb_v1model": {
+    "total": 6084.43636016804,
+    "x": [
+      53.58,
+      41.44,
+      58.58,
+      41.44
+    ]
+  },
+  "access_opt_v1model": {
+    "total": 4109.076780402682,
+    "x": [
+      63.0,
+      5.88,
+      91.5,
+      46.92
+    ],
+    "ga_total": 4110.4240164359835
+  },
+  "realistic": {
+    "storeys": 12,
+    "modules": 516,
+    "total_h": 193.86039290033509,
+    "movement_h": 16.134004011446198,
+    "x": [
+      53.82,
+      29.15,
+      54.87,
+      65.5
+    ],
+    "rule_movement_h": 20.817151718464036,
+    "rule_feasible": false
+  },
+  "sequence": {
+    "1 bay, listed order": 16.134004011446198,
+    "1 bay, 20 random orders (mean)": 16.137792066110517,
+    "2 bays, listed order": 16.13584738051295,
+    "2 bays, random truck order (mean of 20)": 16.138157827499143,
+    "2 bays, grouped by bay (heuristic)": 16.135891442518826,
+    "2 bays, optimised order (local search)": 16.12819913486327
+  },
+  "two_bays_x": [
+    53.78,
+    29.17,
+    55.31,
+    65.5,
+    54.22,
+    65.5
+  ],
+  "two_bays_feasible": true,
+  "two_cranes": [
+    {
+      "case": "1 crane (v2 optimum)",
+      "makespan_h": 193.86039290033509,
+      "waiting_h": 0,
+      "TC1_lifts": 516,
+      "TC2_lifts": 0,
+      "TC1_util": 1.0,
+      "TC2_util": 0,
+      "feasible": true,
+      "layout": "[53.8 29.2 54.9 65.5]"
+    },
+    {
+      "case": "2 cranes, shared-zone lock",
+      "makespan_h": 140.36641279097694,
+      "waiting_h": 77.98458650176275,
+      "TC1_lifts": 276,
+      "TC2_lifts": 240,
+      "TC1_util": 0.7397107187613239,
+      "TC2_util": 0.6562534684853776,
+      "feasible": false,
+      "layout": "[58.1 29.5 26.3 41.5 91.5 40.1  6.6 51.7]"
+    },
+    {
+      "case": "2 cranes, no interference (ideal bound)",
+      "makespan_h": 100.27262505728054,
+      "waiting_h": 0.0,
+      "TC1_lifts": 264,
+      "TC2_lifts": 252,
+      "TC1_util": 1.0,
+      "TC2_util": 0.9616264235043058,
+      "feasible": false,
+      "layout": "[56.4 26.5 46.6 65.  91.6 35.4 22.4 56.2]"
+    }
+  ],
+  "v1_slew_0.05_change_pct": 6.956850827835925,
+  "surrogate_pick_gap_pct": 3.724426548530846
+}

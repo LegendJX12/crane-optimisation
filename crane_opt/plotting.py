@@ -116,7 +116,7 @@ def tornado(rows, base, path, title):
         ax.barh(i, (hi - base) / base * 100, color="#c0392b", height=0.55)
     ax.set_yticks(range(len(rows))); ax.set_yticklabels([r[0] for r in rows], fontsize=8)
     ax.axvline(0, color=INK, lw=0.8)
-    ax.set_xlabel("Change in optimal crane movement time (%)  [blue: -20%, red: +20% of input]")
+    ax.set_xlabel("Change in optimal crane time (%)  [blue: -20%, red: +20% of input]")
     ax.set_title(title, fontsize=10, loc="left"); ax.grid(alpha=0.25, axis="x")
     fig.tight_layout(); fig.savefig(path, dpi=200); plt.close(fig)
 

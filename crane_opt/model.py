@@ -60,7 +60,9 @@ class Problem:
         self.D = d[["x", "y"]].to_numpy(float)          # destinations (N,2)
         self.H = d["height"].to_numpy(float)
         self.W = d["weight_t"].to_numpy(float)
-        self.Z = d["z_level"].to_numpy(float) if "z_level" in d else np.zeros(self.N)
+        # slab level of each module's storey (uses the motion model's floor height)
+        self.Z = ((d["storey"].to_numpy(float) - 1) * self.motion.floor_height
+                  if "storey" in d else np.zeros(self.N))
         self.types = d["type"].to_numpy() if "type" in d else np.array(["m"] * self.N)
 
     def set_order(self, order):
@@ -125,6 +127,9 @@ class Problem:
         C = np.asarray(C, float)
         v = {}
         xlo, xhi, ylo, yhi = st.bounds("crane")
+        h = cr.base_size / 2                      # whole mast base must be inside the site
+        xlo, xhi = max(xlo, st.x_range[0] + h), min(xhi, st.x_range[1] - h)
+        ylo, yhi = max(ylo, st.y_range[0] + h), min(yhi, st.y_range[1] - h)
         v["crane_bounds"] = (np.maximum(0, xlo - C[..., 0]) + np.maximum(0, C[..., 0] - xhi)
                              + np.maximum(0, ylo - C[..., 1]) + np.maximum(0, C[..., 1] - yhi))
         v["crane_overlap"] = self._overlap(C, cr.base_size, cr.base_size)
@@ -132,6 +137,9 @@ class Problem:
         v["reach"] = np.maximum(0, reach_d - cr.radius).sum(-1)
         v["pickup_bounds"] = 0.0; v["pickup_overlap"] = 0.0; v["no_lift"] = 0.0
         xlo, xhi, ylo, yhi = st.bounds("pickup")
+        h = min(st.pickup_w, st.pickup_l) / 2     # bay (short side) must be inside the site
+        xlo, xhi = max(xlo, st.x_range[0] + h), min(xhi, st.x_range[1] - h)
+        ylo, yhi = max(ylo, st.y_range[0] + h), min(yhi, st.y_range[1] - h)
         for P in P_list:
             P = np.asarray(P, float)
             v["pickup_bounds"] = v["pickup_bounds"] + (

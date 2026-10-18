@@ -1,0 +1,92 @@
+[     0s] E1/E2 v1 model benchmark
+[   110s]   grid optimum 3747.05 at [62.99  5.88 63.5  55.  ]
+[   159s]   seed 0: GAv1 3747.1  GAv2 3747.0  DE 3747.0
+[   208s]   seed 1: GAv1 4086.8  GAv2 3747.1  DE 3747.0
+[   253s]   seed 2: GAv1 3747.1  GAv2 3747.0  DE 4228.6
+[   298s]   seed 3: GAv1 3747.0  GAv2 3747.1  DE 3747.0
+[   342s]   seed 4: GAv1 4032.1  GAv2 3747.0  DE 3942.9
+[   384s]   seed 5: GAv1 4083.5  GAv2 3747.0  DE 3942.9
+[   430s]   seed 6: GAv1 3747.1  GAv2 3747.0  DE 3747.0
+[   475s]   seed 7: GAv1 3747.0  GAv2 3747.0  DE 3747.0
+[   522s]   seed 8: GAv1 3747.1  GAv2 3747.0  DE 3747.0
+[   570s]   seed 9: GAv1 3747.0  GAv2 3747.0  DE 3747.0
+[   616s]   seed 10: GAv1 3959.4  GAv2 3747.1  DE 3747.0
+[   663s]   seed 11: GAv1 3747.0  GAv2 3747.0  DE 3747.0
+[   709s]   seed 12: GAv1 3942.9  GAv2 3747.0  DE 3747.0
+[   755s]   seed 13: GAv1 3990.0  GAv2 3747.0  DE 3747.0
+[   803s]   seed 14: GAv1 3942.9  GAv2 3747.0  DE 3747.0
+[   848s]   seed 15: GAv1 3747.0  GAv2 3747.0  DE 3942.9
+[   894s]   seed 16: GAv1 3747.0  GAv2 3747.0  DE 3942.9
+[   942s]   seed 17: GAv1 3747.0  GAv2 3747.0  DE 3942.9
+[   991s]   seed 18: GAv1 3747.0  GAv2 3747.1  DE 3942.9
+[  1039s]   seed 19: GAv1 3942.9  GAv2 3747.0  DE 4228.6
+[  1040s] E3 access rule
+[  1156s] E4 realistic model, 12 storeys
+[  1214s] E5 sequence / two bays
+[  1278s] E6 two cranes
+[  2009s] E7 sensitivity
+[  2290s] E8 ML surrogate
+
+== E2_benchmark_v1model
+                         method  runs    best_s    mean_s   std_s   worst_s hit_global_within_0_5pct mean_gap_to_global  mean_evaluations  mean_runtime_s
+        GA v1 (original set-up)    20 3,747.023 3,847.253 128.123 4,086.789                      60%              2.67%        79,207.800          23.935
+               GA v2 (improved)    20 3,747.024 3,747.039   0.013 3,747.064                     100%             -0.00%        31,729.350           9.876
+         Differential evolution    20 3,747.023 3,853.957 152.562 4,228.647                      60%              2.85%        11,084.500           3.745
+                  Random search    20 3,762.322 4,020.057 143.195 4,217.873                       5%              7.29%        31,729.350           8.910
+       Rule of thumb (centroid)     1 6,084.436 6,084.436   0.000 6,084.436                        -             62.38%             0.000           0.000
+Grid 1.0 m + polish (reference)     1 3,747.048 3,747.048   0.000 3,747.048                        -              0.00%    11,095,237.000         109.797
+
+== E1_reproduction
+                                      item                               value
+Report Table 3, 43 modules, best total (s)                           3,942.930
+           v2 engine at the v1 optimum (s)                           3,942.930
+        v2 engine delay at that layout (s)                           1,695.000
+ Max |v2 - v1| over 200 random layouts (s) < 1e-6 (tests/test_reproduction.py)
+
+== E3_access_rule
+             method  crane_x  crane_y  pickup_x  pickup_y   total_s  movement_s   delay_s  feasible  evaluations  runtime_s                           scenario        violations
+Grid 1.0 m + polish   62.992    5.882    63.501    55.000 3,747.048   2,052.048 1,695.000      True     11095237    109.797                No access rule (v1)               NaN
+   v1 report layout   63.000    5.879    33.872    41.500 3,942.930   2,247.930 1,695.000     False            0      0.000 v1 layout checked with access rule {'access': 16.08}
+Grid 1.0 m + polish   63.004    5.880    91.500    46.917 4,109.077   2,414.077 1,695.000      True     11096771    104.849            With access rule (grid)               NaN
+            GA (v2)   63.404    6.044    91.500    47.667 4,110.424   2,415.424 1,695.000      True        31451     10.451           With access rule (GA v2)               NaN
+
+== E4_realistic
+                 layout  crane_x  crane_y  pickup_x  pickup_y  total_h  movement_h  feasible                       violations
+ v2 optimum (realistic)   53.819   29.152    54.872    65.500  193.860      16.134      True                                 
+            GA v2 check   53.819   29.153    54.912    65.500  193.860      16.134      True                                 
+          Rule of thumb   53.579   41.442    58.579    41.442  198.544      20.817     False                 {'access': 21.1}
+       v1 report layout   63.000    5.879    33.872    41.500  192.583      14.856     False {'access': 16.1, 'load': 1459.9}
+v1-model global optimum   62.992    5.882    63.501    55.000  192.162      14.436     False {'access': 10.5, 'load': 1613.2}
+
+== E5_sequence
+                                   case  movement_h                                        note
+                    1 bay, listed order      16.134                 v2 realistic optimum layout
+         1 bay, 20 random orders (mean)      16.138 spread max-min = 23.4 s (order-independent)
+                   2 bays, listed order      16.136               large/small modules alternate
+2 bays, random truck order (mean of 20)      16.138                                            
+     2 bays, grouped by bay (heuristic)      16.136                                            
+ 2 bays, optimised order (local search)      16.128                      storey precedence kept
+
+== E6_two_cranes
+                                   case  makespan_h  waiting_h  TC1_lifts  TC2_lifts  TC1_util  TC2_util  feasible                                    layout
+                   1 crane (v2 optimum)     193.860      0.000        516          0     1.000     0.000      True                     [53.8 29.2 54.9 65.5]
+             2 cranes, shared-zone lock     140.366     77.985        276        240     0.740     0.656     False [58.1 29.5 26.3 41.5 91.5 40.1  6.6 51.7]
+2 cranes, no interference (ideal bound)     100.273      0.000        264        252     1.000     0.962     False [56.4 26.5 46.6 65.  91.6 35.4 22.4 56.2]
+
+== E7_sensitivity
+                 parameter  crane_time_h_minus20  crane_time_h_plus20  change_minus20_pct  change_plus20_pct
+                Slew speed                22.757               21.273               4.102             -2.686
+             Trolley speed                22.296               21.582               1.993             -1.276
+      Hoist speed (loaded)                23.676               20.650               8.305             -5.537
+       Hoist speed (empty)                22.766               21.257               4.140             -2.760
+   Signal delay per action                20.715               23.006              -5.239              5.239
+Slew/trolley overlap alpha                21.712               22.009              -0.680              0.678
+              Floor height                20.758               22.963              -5.042              5.042
+   Jib radius (crane size)                21.860               21.860              -0.000             -0.000
+
+== E8_surrogate
+                        model    R2  MAPE_pct  fit_s  predict_ms_per_layout
+            Gradient boosting 0.997     0.232  3.037                  0.007
+         Neural network (MLP) 0.999     0.167 18.810                  0.002
+Physics simulator (reference) 1.000     0.000  0.000                  0.418
+[  3916s] DONE. Results in /home/claude/FYP_Enhanced/outputs/v2_results.xlsx
