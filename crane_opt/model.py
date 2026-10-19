@@ -157,6 +157,15 @@ class Problem:
                       + self.hull_eq[:, 2]).max(-1)
                 need = min(st.pickup_w, st.pickup_l) / 2
                 v["access"] = v.get("access", 0.0) + np.maximum(0, need - sd)
+        # several pickup bays must not overlap each other
+        if len(P_list) > 1:
+            ov = 0.0
+            for a in range(len(P_list)):
+                for b in range(a + 1, len(P_list)):
+                    d = np.asarray(P_list[a], float) - np.asarray(P_list[b], float)
+                    ox = st.pickup_w - np.abs(d[..., 0]); oy = st.pickup_l - np.abs(d[..., 1])
+                    ov = ov + np.minimum(np.maximum(ox, 0), np.maximum(oy, 0))
+            v["bay_overlap"] = ov
         v["load"] = 0.0
         return v
 

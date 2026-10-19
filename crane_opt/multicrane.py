@@ -44,7 +44,7 @@ class TwoCraneProblem:
         hi = [b1[1], b1[3]] * 2 + [b2[1], b2[3]] * 2
         return np.array(lo, float), np.array(hi, float)
 
-    def simulate(self, x, penalty=1e3, detail=False):
+    def simulate(self, x, penalty=1e5, detail=False):
         x = np.asarray(x, float)
         C = [x[0:2], x[2:4]]; P = [x[4:6], x[6:8]]
         viol = 0.0
@@ -59,7 +59,8 @@ class TwoCraneProblem:
                 if pr.crane.use_load_chart else np.inf
             ok.append((r <= pr.crane.radius) & (pr.W <= cap))
             v = pr.violations(C[j], [P[j]])
-            v.pop("reach")                       # reach handled per module below
+            v.pop("reach")                       # module reach handled per module below
+            viol += max(0.0, np.hypot(*(P[j] - C[j])) - pr.crane.radius)   # own pickup within own jib
             viol += sum(float(np.sum(a)) for a in v.values())
             # other crane's pickup bay must not overlap this one
         viol += max(0.0, 12.0 - np.hypot(*(P[0] - P[1])))
