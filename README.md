@@ -64,7 +64,9 @@ Wait until it finishes. A warning about "upgrade pip" is safe to ignore.
 |---|---|---|
 | Check that everything works | `python tests\test_reproduction.py` | 5 s |
 | Quick test of all experiments (fewer runs) | `python experiments\run_all.py --quick` | ~10 min |
-| Full results (as reported) | `python experiments\run_all.py` | ~40–60 min |
+| Full results (as reported) | `python experiments\run_all.py` | ~60–70 min |
+| Re-run only the two-crane test | `python experiments\rerun_e6.py` | ~25 min |
+| Re-run only the sequence / two-bay test | `python experiments\rerun_e5.py` | ~3 min |
 
 When it finishes:
 - open `outputs\v2_results.xlsx` for the tables
